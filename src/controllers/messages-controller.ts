@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import crypto from "node:crypto";
 import z from "zod";
 import { MessageRepository } from "../infra/repositories/messages-repository";
-import { AIService } from "../infra/services/ai-service";
+import { AIService } from "../infra/services/ai/ai-service";
 import { ConversationsRepository } from "../infra/repositories/conversations-repository";
 
 const getMessageByIdSchema = z.object({
