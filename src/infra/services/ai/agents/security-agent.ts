@@ -2,16 +2,10 @@ import { createGroq } from "@ai-sdk/groq";
 import { generateText, Output } from "ai";
 import z from "zod";
 
-const passSchema = z.object({
-  status: z.literal("pass"),
-});
-
-const errorSchema = z.object({
-  status: z.literal("error"),
+const outputSchema = z.object({
+  status: z.enum(["pass", "error"]),
   message: z.string(),
 });
-
-const outputSchema = z.discriminatedUnion("status", [passSchema, errorSchema]);
 
 const systemPrompt = `You are a security agent specialized in detecting threats in e-commerce conversations.
 

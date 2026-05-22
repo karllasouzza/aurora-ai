@@ -133,23 +133,23 @@ export class MessagesController {
         return reply.status(500).send({ error: "No response from AI service" });
       }
 
-      const aiMessages = aiResponse
-        .map((message) => ({
-          id: crypto.randomUUID(),
-          conversationId,
-          content: message.content,
-          role: message.role,
-        }));
+      const aiMessages = aiResponse.map((message) => ({
+        id: crypto.randomUUID(),
+        conversationId,
+        content: message.content,
+        role: message.role,
+      }));
 
-      if (aiMessages.length > 0) {
-        await this.messagesRepository.createManyMessages(aiMessages);
+      if (aiMessages.length === 0) {
+        console.error("No messages to save");
+        return reply
+          .status(500)
+          .send({ error: "No messages generated from AI response" });
       }
 
-      const lastMessage = aiResponse[aiResponse.length - 1];
-      return reply.status(201).send({
-        role: lastMessage.role,
-        content: lastMessage.content,
-      });
+      const savedMessages =
+        await this.messagesRepository.createManyMessages(aiMessages);
+      return reply.status(201).send(savedMessages);
     } catch (error: any) {
       console.error("Error creating message:", error);
       reply.status(500).send({
